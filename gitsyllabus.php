@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: GitSyllabus
-Plugin URI: http://emac-utd.github.com/gitsyllabus
+Plugin URI: http://emac-utd.github.com/git-syllabus
 Description: A tool to move syllabus data from WordPress to GitHub 
 Version: 0.1
 Author: EMAClab
