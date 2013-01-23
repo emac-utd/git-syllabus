@@ -32,6 +32,8 @@ function gitsyllabus_meta(){
 //Render meta box
 function gitsyllabus_box_publish(){
 
+    global $post;
+
     wp_nonce_field( plugin_basename(__FILE__), 'gitsyllabus_nonce' );
 
     echo '<label for="gs_publish">' . __("Publish to GitHub", 'gitsyllabus_textdomain' ) . '</label> ';
