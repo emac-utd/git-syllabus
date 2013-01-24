@@ -9,6 +9,10 @@ Author URI: http://github.com/emac-utd
 License: MIT
 */
 
+//need to define action upon install
+register_activation_hook( __FILE__, 'gitsyllabus_init' );
+
+
 //Meta box functions
 add_action('add_meta_boxes', 'gitsyllabus_meta');
 add_action('save_post', 'gitsyllabus_meta_save');
@@ -79,9 +83,66 @@ function gitsyllabus_options_init(){
 
 function gitsyllabus_options_page(){
     //Add Github linkup here
+    //Need to get application token and API token. 
+
+    //currently storing data more globally, but can attach these as user_meta
+    add_option($repo_name, $value);
+    add_option($dev_key, $value);
+    add_option($oauth_token, $value);
+    
     ?>
 
     <?php
 }
+
+?>
+
+
+//functions for OAuth
+<?php 
+    //creating objects to instantiate as of right now but will likely change to straight functions
+
+    class gitsyllabus_oauth {
+
+        function __construct() {
+            //create oauth object and store developer key
+        }
+
+        function oauth_init() {
+
+        }
+
+        function oauth_validate() {
+
+        }
+    }
+?>
+
+//functions for GitHub API calls
+
+<?php
+    add_action( 'publish_post', $github);
+    class github_api {
+
+        function __construct() {
+
+        }
+
+        function create_repo(){
+
+        }
+
+        function commit() {
+
+        }
+
+        function pull () {
+
+        }
+
+        function get_repo_status() {
+
+        }
+    }
 
 ?>
