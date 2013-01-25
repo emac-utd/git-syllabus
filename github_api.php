@@ -2,11 +2,17 @@
     add_action( 'publish_post', $github);
     class github_api {
 
-        function __construct($key, $secret) { 
-            $this->$key = $key;
-            $this->$secret = $secret;
+        function __construct($client_id, $state) { 
+            $this->$client_id = $client_id;
+            $this->$state = $state;
 
             //take in API key and generate repo name and create repo.
+            $params = array(
+                'client_id' => $client_id,
+                'redirect_uri' => $redirect_uri,
+                'state' => $state, 
+                );
+ 
         }
 
         function create_repo(){
