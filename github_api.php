@@ -2,6 +2,8 @@
     add_action( 'publish_post', $github);
     class github_api {
 
+        $has_repo = false;
+
         function __construct($client_id, $state) { 
             $this->$client_id = $client_id;
             $this->$state = $state;
