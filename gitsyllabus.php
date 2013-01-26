@@ -103,9 +103,26 @@ function gitsyllabus_options_page(){
 
 ?>
 
+<?php 
 
-//functions for OAuth
+function oauth_init($client_id, $state) {
+    $args = array(
+        'client_id' => $client_id,
+        'state' => $state
+     );
+    wp_redirect( 'https://github.com/login/oauth/authorize', $args ); exit;
+
+}
+
+function sync_with_github()  {
+    global $post;
+    if ( $github->$has_repo ) {
+        $github->commit($post);
+        return $post->$post_id;
+    }
+}
 
 
-//functions for GitHub API calls
+
+?>
 
