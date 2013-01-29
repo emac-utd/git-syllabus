@@ -11,6 +11,10 @@ License: MIT
 
 //need to define action upon install
 
+
+if( !class_exists( 'WP_Http' ) )
+    include_once( ABSPATH . WPINC. '/class-http.php' );
+
 require_once('config.php');
 require_once('github_api.php');
 
