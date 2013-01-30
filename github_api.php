@@ -2,9 +2,11 @@
     add_action( 'publish_post', $github);
     class github_api {
 
+        const OAUTH_URL = 'https://github.com/login/oauth/';
         $has_repo = false;
 
-        function __construct($client_id, $state) { 
+        function __construct($request, $client_id, $state) { 
+            $this->$request = $request;
             $this->$client_id = $client_id;
             $this->$state = $state;
 
@@ -17,12 +19,16 @@
  
         }
 
-        function create_repo(){
-            //curl -i -H 'Authorization: token TOKENHERE' -d '{"name":":NAME"}' https://api.github.com/user/repos
+        function create_repo($name){
+            //create
+
+            //add conditional for creating for org? (different pathway)
+            $args = array('name' => $name );
+            wp_remote_post( $OAUTH . '/user/repos', $args );
         }
 
         function commit() {
-
+            
         }
 
         function pull () {
