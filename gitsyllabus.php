@@ -18,6 +18,7 @@ if( !class_exists( 'WP_Http' ) )
 require_once('config.php');
 require_once('github_api.php');
 
+//Need to define init function
 register_activation_hook( __FILE__, 'gitsyllabus_init' );
 
 
@@ -97,7 +98,9 @@ function gitsyllabus_options_page(){
 
     //currently storing data more globally, but can attach these as user_meta
     
-    add_option($dev_key, $value);
+    add_option($client_id, $value);
+    add_option( $client_secret, $value);
+    //$oauth = new gitsyllabus_oauth($client_id, $client_secret); 
     add_option($oauth_token, $value);
     
     ?>
@@ -108,25 +111,16 @@ function gitsyllabus_options_page(){
 ?>
 
 <?php 
+    
 
-function oauth_init($client_id, $state) {
-    $args = array(
-        'client_id' => $client_id,
-        'state' => $state
-     );
-    wp_redirect( 'https://github.com/login/oauth/authorize', $args ); exit;
 
-}
-
-function sync_with_github()  {
-    global $post;
-    if ( $github->$has_repo ) {
-        $github->commit($post);
-        return $post->$post_id;
+    function sync_with_github()  {
+        global $post;
+        if ( $github->$has_repo ) {
+            $github->commit($post);
+            return $post->$post_id;
+        }
     }
-}
-
-
 
 ?>
 
