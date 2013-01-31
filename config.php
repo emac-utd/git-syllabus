@@ -1,8 +1,8 @@
 <?php 
     
-    function github_oauth_retrieval() {
-        wp_redirect( 'https://github.com/login/oauth', $status = 302 );
-    }
+    // function github_oauth_retrieval() {
+    //     wp_redirect( 'https://github.com/login/oauth', $status = 302 );
+    // }
 
     class gitsyllabus_oauth {
 
@@ -43,7 +43,7 @@
                 'code' => $code
             );
 
-            $response = wp_remote_post( OAUTH_URL . 'access_token', $args = array );
+            $response = wp_remote_post( OAUTH_URL . 'access_token', $args );
 
 
             if ( is_wp_error( $response ) ) {
