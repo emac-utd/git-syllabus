@@ -3,12 +3,11 @@
     class github_api {
 
         const API_URL = 'https://api.github.com/';
-        $has_repo = false;
 
-        function __construct($request, $client_id, $state) { 
-            $this->$request = $requxest;
-            $this->$client_id = $client_id;
-            $this->$state = $state;
+
+        function __construct($oauth_token) { 
+            $this->$oauth_token = $oauth_token;
+            $this->url = API_URL . $oauth_token . '/';
 
             //take in API key and generate repo name and create repo.
             $params = array(
@@ -16,15 +15,38 @@
                 'redirect_uri' => $redirect_uri,
                 'state' => $state, 
                 );
- 
+            
+        }
+
+        function get_user_data() {
+            $response = wp_remote_get( $url . '/user');
+
+
+            if ( is_wp_error( $response ) ) {
+                echo 'get_user_data effed up';
+            }
+            else {
+                $this->$owner = $response['body']['login'];
+                $this->$type = $response['body']['type'];
+
+                if ($this->$type != 'User') {
+                    $this->is_org = true;
+                }
+            }  
+
         }
 
         function create_repo($name){
+            //TODO: build in a verification that the repo doesn't exist yet
+
             //create
+            $this->$repo_name = $name;
 
             //add conditional for creating for org? (different pathway)
             $args = array('name' => $name );
-            $response = wp_remote_post( API_URL . 'user/repos', $args );
+
+            $response = wp_remote_post( $url . 'user/repos', $args );
+
             if (is_wp_error( $response )) {
                 echo 'repo creation effed up';
             }
@@ -35,7 +57,11 @@
 
         }
 
-        function commit($owner, $repo, $message, $author, $parents, $tree) {
+        function access_existing_repo($name) {
+            
+        }
+
+        function commit($owner, $message, $author, $parents, $tree) {
 
             $args = array(
                 'message' => $message,
@@ -44,9 +70,9 @@
                 'tree' => $tree, 
             );
                         
-            $response = wp_remote_post( API_URL . 'repos/' . $owner . '/' . $repo . '/git/commits' , $args = array )
+            $response = wp_remote_post( $url . 'repos/' . $this->$owner . '/' . $this->$repo_name . '/git/commits' , $args );
 
-            if (is_wp_error( $response )) {
+            if ( is_wp_error( $response ) ) {
                 echo 'commit effed up';
             }
             else {
