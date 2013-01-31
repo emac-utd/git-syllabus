@@ -1,8 +1,4 @@
 <?php 
-    
-    // function github_oauth_retrieval() {
-    //     wp_redirect( 'https://github.com/login/oauth', $status = 302 );
-    // }
 
     class gitsyllabus_oauth {
 
@@ -40,7 +36,7 @@
                 'client_id' => $client_id,
                 'client_secret' => $client_secret,
                 'state' => $state,
-                'code' => $code
+                'code' => $oauth_code
             );
 
             $response = wp_remote_post( OAUTH_URL . 'access_token', $args );
@@ -54,6 +50,7 @@
                 //where to parse out code response?
                 // $this->$oauth_code = $response
 
+                //should return $oauth_token
             }
 
         }
