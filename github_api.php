@@ -6,7 +6,7 @@
 
 
         function __construct($oauth_token) { 
-            $this->$oauth_token = $oauth_token;
+            $this->oauth_token = $oauth_token;
             $this->url = API_URL . $oauth_token . '/';
 
             //take in API key and generate repo name and create repo.
