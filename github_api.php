@@ -51,6 +51,7 @@
                 echo 'repo creation effed up';
             }
             else {
+                $has_repo = true;
                 //right now just returning the url of the newly created repo.
                 return $response['body']['url'];
             }
@@ -58,7 +59,7 @@
         }
 
         function access_existing_repo($name) {
-            
+
         }
 
         function commit($owner, $message, $author, $parents, $tree) {
