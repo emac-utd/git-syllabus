@@ -122,5 +122,13 @@ function gitsyllabus_options_page(){
         }
     }
 
+//generate state to send to github so that requests can be verified.
+    
+    function generate_state() {
+
+        return substr(md5(microtime()),rand(0,26),5);
+
+    }
+
 ?>
 
