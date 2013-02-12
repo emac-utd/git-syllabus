@@ -84,13 +84,61 @@ add_action('admin_init', 'gitsyllabus_options_init');
 
 function gitsyllabus_options_init(){
 
-    register_setting( 'gitsyllabus_options', 'enable' );
+    //Add setting entry in database
+    register_setting( 'gitsyllabus_options', 'gitsyllabus_options' ); 
+
+    //Create section group for setup
+    add_settings_section( 'gitsyllabus_options_setup', __('GitSyllabus Setup'), 'gitsyllabus_display_setup', 'git-syllabus');
+
+    //Setup fields
+    add_settings_field('gitsyllabus_consumerkey', __('GitHub consumer key'), 'gitsyllabus_display_consumerkey', 'git-syllabus', 'gitsyllabus_options_setup');
+    add_settings_field('gitsyllabus_consumersecret', __('GitHub consumer secret'), 'gitsyllabus_display_consumersecret', 'git-syllabus', 'gitsyllabus_options_setup');
+    add_settings_field('gitsyllabus_authkey', __('GitHub OAuth token'), 'gitsyllabus_display_authkey', 'git-syllabus', 'gitsyllabus_options_setup');
+    add_settings_field('gitsyllabus_authsecret', __('GitHub OAuth secret'), 'gitsyllabus_display_authsecret', 'git-syllabus', 'gitsyllabus_options_setup');
 
 }
+function gitsyllabus_display_setup(){
+    ?>
+    <?php
+}
 
-//Create settings page
-//BUG: Getting function not found
-//add_submenu_page( 'options-general.php', 'GitSyllabus Settings', 'GitSyllabus', 'manage_options', 'git-syllabus', $function = 'gitsyllabus_options_page' );
+function gitsyllabus_display_consumerkey(){
+
+    $options = get_option('gitsyllabus_options');
+
+    echo "<input type='text' id='gitsyllabus_consumerkey' name='gitsyllabus_options[gitsyllabus_consumerkey]' size='7' value='{$options['gitsyllabus_consumerkey']}' /><br />";
+    
+}
+
+function gitsyllabus_display_consumersecret(){
+    $options = get_option('gitsyllabus_options');
+
+    echo "<input type='text' id='gitsyllabus_consumersecret' name='gitsyllabus_options[gitsyllabus_consumersecret]' size='7' value='{$options['gitsyllabus_consumersecret']}' /><br />";
+    
+}
+
+function gitsyllabus_display_authkey(){
+    $options = get_option('gitsyllabus_options');
+
+    echo "<input type='text' id='gitsyllabus_authkey' name='gitsyllabus_options[gitsyllabus_authkey]' size='7' value='{$options['gitsyllabus_authkey']}' /><br />";
+    
+}
+
+function gitsyllabus_display_authsecret(){
+    $options = get_option('gitsyllabus_options');
+
+    echo "<input type='text' id='gitsyllabus_authsecret' name='gitsyllabus_options[gitsyllabus_authsecret]' size='7' value='{$options['gitsyllabus_authsecret']}' /><br />";
+    
+}
+
+add_action('admin_menu', 'gitsyllabus_init_menu');
+
+function gitsyllabus_init_menu(){
+
+    //Create settings page
+    add_submenu_page( 'options-general.php', 'GitSyllabus Settings', 'GitSyllabus', 'manage_options', 'git-syllabus', $function = 'gitsyllabus_options_page' );
+
+}
 
 function gitsyllabus_options_page(){
     //Add Github linkup here
@@ -98,15 +146,24 @@ function gitsyllabus_options_page(){
 
     //currently storing data more globally, but can attach these as user_meta
     
-    add_option($client_id, $value);
-    add_option( $client_secret, $value);
+    /*update_option($client_id, $value);
+    update_option( $client_secret, $value);
     //$oauth = new gitsyllabus_oauth($client_id, $client_secret); 
-    add_option($oauth_token, $value);
-    
+    update_option($oauth_token, $value);
+    update_option($)    */
     ?>
+
+        <form action="options.php" method="post">
+            <?php settings_fields('gitsyllabus_options'); ?>
+            <?php do_settings_sections('git-syllabus'); ?>
+            
+            <input name="Submit" type="submit" value="<?php esc_attr_e('Save Changes'); ?>" />
+        </form>
 
     <?php
 }
+
+add_action('publish_post', 'sync_with_github');
 
 ?>
 
@@ -114,11 +171,12 @@ function gitsyllabus_options_page(){
     
 
 
-    function sync_with_github()  {
-        global $post;
-        if ( $github->$has_repo ) {
+    function sync_with_github($post_id)  {
+        $github_post = get_post($post_id);
+
+        if ( $github->has_repo ) {
             $github->commit($post);
-            return $post->$post_id;
+            return $post->post_id;
         }
     }
 
