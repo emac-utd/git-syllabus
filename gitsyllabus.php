@@ -83,7 +83,6 @@ function gitsyllabus_meta_save($post_id){
 add_action('admin_init', 'gitsyllabus_options_init');
 
 function gitsyllabus_options_init(){
-
     //Add setting entry in database
     register_setting( 'gitsyllabus_options', 'gitsyllabus_options' ); 
 
@@ -169,15 +168,20 @@ add_action('publish_post', 'sync_with_github');
 
 <?php 
     
-
+    
 
     function sync_with_github($post_id)  {
-        $github_post = get_post($post_id);
+        $post = get_post($post_id);
 
-        if ( $github->has_repo ) {
+        if ( !$github->has_repo ) {
+            //Deal with the fact there's no repo
+        }
+
+        else {
             $github->commit($post);
             return $post->post_id;
         }
+
     }
 
 //generate state to send to github so that requests can be verified.
