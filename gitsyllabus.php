@@ -150,6 +150,19 @@ function gitsyllabus_options_page(){
     //$oauth = new gitsyllabus_oauth($client_id, $client_secret); 
     update_option($oauth_token, $value);
     update_option($)    */
+
+        $protocol = strpos(strtolower($_SERVER['SERVER_PROTOCOL']),'https')
+            === FALSE ? 'http' : 'https';
+        $host     = $_SERVER['HTTP_HOST'];
+        $script   = $_SERVER['SCRIPT_NAME'];
+        $params   = $_SERVER['QUERY_STRING'];
+
+        $currentUrl = $protocol . '://' . $host . $script . '?' . $params;
+
+        if($_GET['code'] && $_GET['state'] == $_SESSION['nonce'])
+        {
+            
+        }
     ?>
 
         <form action="options.php" method="post">
@@ -160,6 +173,19 @@ function gitsyllabus_options_page(){
         </form>
 
     <?php
+
+        $options = get_option('gitsyllabus_options');
+        if($options['gitsyllabus_consumerkey'] && $options['gitsyllabus_consumersecret'])
+        {
+            $redirect = urlencode($currentUrl);
+
+            $_SESSION['nonce'] = generate_state();
+            echo "<a href='https://github.com/login/oauth/authorize?".
+                "client_id=$options[gitsyllabus_consumerkey]".
+                "&scope=repo".
+                "&state=$_SESSION[nonce]".
+                "&redirect_uri=$redirect'>Login with Github</a>";
+        }
 }
 
 add_action('publish_post', 'sync_with_github');
