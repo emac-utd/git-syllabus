@@ -93,7 +93,6 @@ function gitsyllabus_options_init(){
     add_settings_field('gitsyllabus_consumerkey', __('GitHub consumer key'), 'gitsyllabus_display_consumerkey', 'git-syllabus', 'gitsyllabus_options_setup');
     add_settings_field('gitsyllabus_consumersecret', __('GitHub consumer secret'), 'gitsyllabus_display_consumersecret', 'git-syllabus', 'gitsyllabus_options_setup');
     add_settings_field('gitsyllabus_authkey', __('GitHub OAuth token'), 'gitsyllabus_display_authkey', 'git-syllabus', 'gitsyllabus_options_setup');
-    add_settings_field('gitsyllabus_authsecret', __('GitHub OAuth secret'), 'gitsyllabus_display_authsecret', 'git-syllabus', 'gitsyllabus_options_setup');
 
 }
 function gitsyllabus_display_setup(){
@@ -140,6 +139,8 @@ function gitsyllabus_init_menu(){
 }
 
 function gitsyllabus_options_page(){
+    if(session_start())
+        echo "Session successfully started";
     //Add Github linkup here
     //Need to get application token and API token. GitHub webflow says to 
 
@@ -159,9 +160,21 @@ function gitsyllabus_options_page(){
 
         $currentUrl = $protocol . '://' . $host . $script . '?' . $params;
 
-        if($_GET['code'] && $_GET['state'] == $_SESSION['nonce'])
+        $options = get_option('gitsyllabus_options');
+
+        if($_GET['code'] && $_GET['state'] == $_SESSION['gs_nonce'])
         {
-            
+            $getToken = new gitsyllabus_oauth($options['gitsyllabus_consumerkey'], $options['gitsyllabus_consumersecret']);
+
+            $token = $getToken->oauth_validate($_GET['code']);
+            $options['gitsyllabus_authkey'] = $token;
+            update_option('gitsyllabus_options', $options);
+            echo "Token: $token";
+        }
+        else if($_GET['code'])
+        {
+            echo "CSRF attempt detected";
+            echo "State should be $_SESSION[gs_nonce]"; //Is showing as empty
         }
     ?>
 
@@ -174,16 +187,16 @@ function gitsyllabus_options_page(){
 
     <?php
 
-        $options = get_option('gitsyllabus_options');
+        
         if($options['gitsyllabus_consumerkey'] && $options['gitsyllabus_consumersecret'])
         {
             $redirect = urlencode($currentUrl);
 
-            $_SESSION['nonce'] = generate_state();
+            $_SESSION['gs_nonce'] = generate_state();
             echo "<a href='https://github.com/login/oauth/authorize?".
                 "client_id=$options[gitsyllabus_consumerkey]".
                 "&scope=repo".
-                "&state=$_SESSION[nonce]".
+                "&state=$_SESSION[gs_nonce]".
                 "&redirect_uri=$redirect'>Login with Github</a>";
         }
 }

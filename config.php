@@ -31,26 +31,26 @@
 
         }
 
-        function oauth_validate() {
+        function oauth_validate($oauth_code) {
             $args = array(
-                'client_id' => $client_id,
-                'client_secret' => $client_secret,
-                'state' => $state,
-                'code' => $oauth_code
+                'body' => array(
+                    'client_id' => $client_id,
+                    'client_secret' => $client_secret,
+                    'code' => $oauth_code
+                ),
+                'headers' => array( 'Accepts' => 'application/json')
             );
 
             $response = wp_remote_post( OAUTH_URL . 'access_token', $args );
+            $body = json_decode($response['body']);
 
-
-            if ( is_wp_error( $response ) ) {
-                echo 'oauth validation effed up';
+            if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
+                echo 'oauth validation failed';
+                return "";
             }
 
             else {
-                //where to parse out code response?
-                // $this->$oauth_code = $response
-
-                //should return $oauth_token
+                return $body->access_token;
             }
 
         }
