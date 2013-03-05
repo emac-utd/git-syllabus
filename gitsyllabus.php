@@ -139,8 +139,6 @@ function gitsyllabus_init_menu(){
 }
 
 function gitsyllabus_options_page(){
-    if(session_start())
-        echo "Session successfully started";
     //Add Github linkup here
     //Need to get application token and API token. GitHub webflow says to 
 
@@ -162,7 +160,7 @@ function gitsyllabus_options_page(){
 
         $options = get_option('gitsyllabus_options');
 
-        if($_GET['code'] && $_GET['state'] == $_SESSION['gs_nonce'])
+        if($_GET['code'] && $_GET['state'] == get_option('gs_nonce'))
         {
             $getToken = new gitsyllabus_oauth($options['gitsyllabus_consumerkey'], $options['gitsyllabus_consumersecret']);
 
@@ -174,7 +172,7 @@ function gitsyllabus_options_page(){
         else if($_GET['code'])
         {
             echo "CSRF attempt detected";
-            echo "State should be $_SESSION[gs_nonce]"; //Is showing as empty
+            echo "State should be ".get_option('gs_nonce'); //Is showing as empty
         }
     ?>
 
@@ -192,11 +190,11 @@ function gitsyllabus_options_page(){
         {
             $redirect = urlencode($currentUrl);
 
-            $_SESSION['gs_nonce'] = generate_state();
+            update_option('gs_nonce', generate_state());
             echo "<a href='https://github.com/login/oauth/authorize?".
                 "client_id=$options[gitsyllabus_consumerkey]".
                 "&scope=repo".
-                "&state=$_SESSION[gs_nonce]".
+                "&state=".get_option('gs_nonce').
                 "&redirect_uri=$redirect'>Login with Github</a>";
         }
 }
