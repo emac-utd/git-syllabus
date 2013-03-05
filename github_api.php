@@ -82,6 +82,22 @@
             }    
         }
 
+        function get_repos()
+        {
+            $args = array('headers' => array('Accept' => 'application/json'));
+            $response = wp_remote_get(github_api::API_URL . 'user/repos?access_token=' . $oauth_token, $args);
+
+            if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
+                echo 'Get repos failed';
+                return "";
+            }
+
+            else {
+                return json_decode($response['body']);
+            }
+
+        }
+
         function pull () {
 
         }

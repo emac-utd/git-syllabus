@@ -49,16 +49,20 @@ function gitsyllabus_box_publish(){
 
     wp_nonce_field( plugin_basename(__FILE__), 'gitsyllabus_nonce' );
 
-    echo '<label for="gs_publish">' . __("Publish to GitHub", 'gitsyllabus_textdomain' ) . '</label> ';
-    if(get_post_meta($post->ID,'gs_publish',true) == 'publish')
-    {
-        echo '<input type="checkbox" id="gs_publish" name="gs_publish" value="publish" checked="checked" />';
-    }
-    else
-    {
-        echo '<input type="checkbox" id="gs_publish" name="gs_publish" value="publish" />';
-    }
+    $options = get_option('gitsyllabus_options');
 
+    if($options['gitsyllabus_authkey'])
+    {
+        echo '<label for="gs_publish">' . __("Publish to GitHub", 'gitsyllabus_textdomain' ) . '</label> ';
+        if(get_post_meta($post->ID,'gs_publish',true) == 'publish')
+        {
+            echo '<input type="checkbox" id="gs_publish" name="gs_publish" value="publish" checked="checked" />';
+        }
+        else
+        {
+            echo '<input type="checkbox" id="gs_publish" name="gs_publish" value="publish" />';
+        }
+    }
 }
 
 //Handle meta box input
