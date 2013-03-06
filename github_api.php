@@ -7,7 +7,7 @@
 
         function __construct($oauth_token) { 
             $this->oauth_token = $oauth_token;
-            $this->url = API_URL . $oauth_token . '/';
+            $this->url = github_api::API_URL . $oauth_token . '/';
 
             //take in API key and generate repo name and create repo.
             $params = array(
@@ -62,24 +62,111 @@
 
         }
 
-        function commit($owner, $message, $author, $parents, $tree) {
+        function commit($content, $message) {
+
+            $git_url = $this->$url . 'repos/' . $this->$owner . '/' . $this->$repo_name . '/git/';
 
             $args = array(
-                'message' => $message,
-                'author' => $author,
-                'parents' => $parents,
-                'tree' => $tree, 
+                'headers' => array( 'Accept' => 'application/json')
             );
-                        
-            $response = wp_remote_post( $url . 'repos/' . $this->$owner . '/' . $this->$repo_name . '/git/commits' , $args );
 
-            if ( is_wp_error( $response ) ) {
-                echo 'commit effed up';
+            $response = wp_remote_get( $git_url . 'refs/heads/master', $args);
+
+
+            //get sha from latest commit
+
+            if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
+                echo 'getting latest sha failed';
+                return "";
             }
+
             else {
-                //right now just returning the url of the newly created repo.
-                return $response['body']['url'];
-            }    
+                $body = json_decode($response['body']);
+                $sha_latest_commit = $body->object->sha;
+            }
+
+            $response = wp_remote_get( $git_url . 'commits/' . $sha_latest_commit, $args);
+
+            //get $sha_base_tree
+
+            if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
+                echo 'getting sha tree failed';
+                return "";
+            }
+
+            else {
+                $body = json_decode($response['body']);
+                $sha_base_tree = $body->tree->sha;
+            }
+
+           $args = array(
+               'body' => array(
+                   'base_tree' => $sha_base_tree,
+                   'tree' => array(
+                        'path' => $file_name, //need to define this
+                        'content' => $content
+                    )
+
+               ),
+               'headers' => array( 'Accept' => 'application/json')
+           );     
+
+
+            $response = wp_remote_post( $git_url . '/trees', $args  );
+
+
+            if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
+                echo 'creating tree failed';
+                return "";
+            }
+
+            else {
+                $body = json_decode($response['body']);
+                $sha_new_tree = $body->sha;
+            }
+
+            $args = array(
+                'body' => array(
+                    'base_tree' => $sha_base_tree,
+                    'parents' => array( $sha_latest_commit ),
+                    'tree' => $sha_new_tree
+
+                ),
+                'headers' => array( 'Accept' => 'application/json')
+            ); 
+
+            $response = wp_remote_post( $git_url . 'commits', $args );
+
+            if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
+                echo 'creating commit failed';
+                return "";
+            }
+
+            else {
+                $body = json_decode($response['body']);
+                $sha_new_commit = $body->sha;
+            }
+
+            $args = array(
+                'body' => array(
+                    'sha' => $sha_new_commit
+                ),
+                'headers' => array( 'Accept' => 'application/json')
+            ); 
+
+
+            $response = wp_remote_post( $url . 'refs/head/master', $args );
+
+            if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
+                echo 'creating reference failed';
+                return "";
+            }
+
+            else {
+                $body = json_decode($response['body']);
+                echo $body;
+            }
+
         }
 
         function get_repos()

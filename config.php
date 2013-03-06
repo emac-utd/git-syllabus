@@ -41,6 +41,7 @@
                 'headers' => array( 'Accept' => 'application/json')
             );
             $response = wp_remote_post( gitsyllabus_oauth::OAUTH_URL . 'access_token', $args );
+            print_r($response);
 
             if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
                 echo 'oauth validation failed';
