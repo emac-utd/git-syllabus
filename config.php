@@ -6,8 +6,8 @@
 
         function __construct($client_id, $client_secret) {
             //create oauth object and store developer key
-            $this->$client_id = $client_id;
-            $this->$client_secret = $client_secret;            
+            $this->client_id = $client_id;
+            $this->client_secret = $client_secret;            
         }
 
         function oauth_init() {
@@ -34,15 +34,13 @@
         function oauth_validate($oauth_code) {
             $args = array(
                 'body' => array(
-                    'client_id' => $client_id,
-                    'client_secret' => $client_secret,
+                    'client_id' => $this->client_id,
+                    'client_secret' => $this->client_secret,
                     'code' => $oauth_code
                 ),
-                'headers' => array( 'Accepts' => 'application/json')
+                'headers' => array( 'Accept' => 'application/json')
             );
-
-            $response = wp_remote_post( OAUTH_URL . 'access_token/', $args );
-            
+            $response = wp_remote_post( gitsyllabus_oauth::OAUTH_URL . 'access_token', $args );
             print_r($response);
 
             if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
