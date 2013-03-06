@@ -41,8 +41,9 @@
                 'headers' => array( 'Accepts' => 'application/json')
             );
 
-            $response = wp_remote_post( OAUTH_URL . 'access_token', $args );
-            $body = json_decode($response['body']);
+            $response = wp_remote_post( OAUTH_URL . 'access_token/', $args );
+            
+            print_r($response);
 
             if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
                 echo 'oauth validation failed';
@@ -50,6 +51,7 @@
             }
 
             else {
+                $body = json_decode($response['body']);
                 return $body->access_token;
             }
 
