@@ -1,31 +1,39 @@
 <?php
-    add_action( 'publish_post', $github);
     class github_api {
 
         const API_URL = 'https://api.github.com/';
 
 
         function __construct($oauth_token) { 
-            $this->oauth_token = $oauth_token;
-            $this->url = github_api::API_URL . $oauth_token . '/';
+            $this->$oauth_token = $oauth_token;
+            $this->$url = github_api::API_URL;
             get_user_data();
-            $this->repo_name = 'wordpress';
+            $this->$repo_name = 'wordpress';
             
         }
 
         function get_user_data() {
-            $response = wp_remote_get( $url . '/user');
+
+            $args = array(
+                'headers' => array( 
+                    'Accept' => 'application/json',
+                    'Authorization' => 'token ' . $this->$oauth_token
+                )
+            );
+
+            $response = wp_remote_get( $this->$url . '/user', $args);
 
 
             if ( is_wp_error( $response ) ) {
                 echo 'get_user_data effed up';
             }
             else {
-                $this->$owner = $response['body']['login'];
-                $this->$type = $response['body']['type'];
+                $body = json_decode($response['body']);
+                $this->$owner = $body->login;
+                $this->$type = $body->type;
 
                 if ($this->$type != 'User') {
-                    $this->is_org = true;
+                    $this->$is_org = true;
                 }
             }  
 
@@ -60,10 +68,13 @@
         function commit($post) {
             $content = $post['post_content'];
             $file_name = $post['post_title'];
-            $git_url = $this->$url . 'repos/' . $this->$owner . '/' . $this->$repo_name . '/git/';
+            $git_url = $this->$url . 'repos/' . $this->$owner . '/' . $this->$repo_name . '/git/ ';
 
             $args = array(
-                'headers' => array( 'Accept' => 'application/json')
+                'headers' => array( 
+                    'Accept' => 'application/json',
+                    'Authorization' => 'token ' . $this->$oauth_token
+                )
             );
 
             $response = wp_remote_get( $git_url . 'refs/heads/master', $args);
