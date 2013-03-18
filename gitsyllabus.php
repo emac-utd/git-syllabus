@@ -164,7 +164,7 @@ function gitsyllabus_options_page(){
 
         $options = get_option('gitsyllabus_options');
 
-        if($_GET['code'] && $_GET['state'] == get_option('gs_nonce'))
+        if($_GET['code'] && $_GET['state'] == get_option('gitsyllabus_state'))
         {
             $getToken = new gitsyllabus_oauth($options['gitsyllabus_consumerkey'], $options['gitsyllabus_consumersecret']);
 
@@ -176,7 +176,7 @@ function gitsyllabus_options_page(){
         else if($_GET['code'])
         {
             echo "CSRF attempt detected";
-            echo "State should be ".get_option('gs_nonce'); //Is showing as empty
+            echo "State should be ".get_option('gitsyllabus_state'); //Is showing as empty
         }
     ?>
 
@@ -194,11 +194,11 @@ function gitsyllabus_options_page(){
         {
             $redirect = urlencode($currentUrl);
 
-            update_option('gs_nonce', generate_state());
+            update_option('gitsyllabus_state', generate_state());
             echo "<a href='https://github.com/login/oauth/authorize?".
                 "client_id=$options[gitsyllabus_consumerkey]".
                 "&scope=repo".
-                "&state=".get_option('gs_nonce').
+                "&state=".get_option('gitsyllabus_state').
                 "&redirect_uri=$redirect'>Login with Github</a>";
         }
 }
@@ -212,16 +212,22 @@ add_action('publish_post', 'sync_with_github');
     
 
     function sync_with_github($post_id)  {
+
+        $options = get_option('gitsyllabus_options');
+        $github = new github_api($options['gitsyllabus_authkey']);
+
         $post = get_post($post_id);
 
-        if ( !$github->has_repo ) {
-            //Deal with the fact there's no repo
-        }
+        // if ( !$github->has_repo ) {
+        //     $github->create_repo('wordpress');
+        // }
 
-        else {
-            $github->commit($post);
-            return $post->post_id;
-        }
+        // else {
+
+        $github->commit($post);
+        return $post->post_id;
+        
+        // }
 
     }
 
