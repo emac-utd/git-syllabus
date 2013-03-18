@@ -8,13 +8,8 @@
         function __construct($oauth_token) { 
             $this->oauth_token = $oauth_token;
             $this->url = github_api::API_URL . $oauth_token . '/';
-
-            //take in API key and generate repo name and create repo.
-            $params = array(
-                'client_id' => $client_id,
-                'redirect_uri' => $redirect_uri,
-                'state' => $state, 
-                );
+            get_user_data();
+            $this->repo_name = 'wordpress';
             
         }
 
@@ -62,8 +57,9 @@
 
         }
 
-        function commit($content, $message) {
-
+        function commit($post) {
+            $content = $post['post_content'];
+            $file_name = $post['post_title'];
             $git_url = $this->$url . 'repos/' . $this->$owner . '/' . $this->$repo_name . '/git/';
 
             $args = array(
