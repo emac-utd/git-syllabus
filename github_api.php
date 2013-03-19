@@ -122,7 +122,7 @@
             );   
 
 
-            $response = wp_remote_post( $git_url . '/trees', $args  );
+            $response = wp_remote_post( $git_url . 'trees', $args  );
 
 
             if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
@@ -193,7 +193,7 @@
                     'Authorization' => 'token ' . $this->$oauth_token
                 )
             );
-            $response = wp_remote_get(github_api::API_URL . 'user/repos?access_token=' . $oauth_token, $args);
+            $response = wp_remote_get(github_api::API_URL . 'user/repos', $args);
 
             if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
                 echo 'Get repos failed';
