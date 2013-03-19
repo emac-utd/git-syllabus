@@ -6,7 +6,6 @@
 
         function __construct($oauth_token) { 
             $this->$oauth_token = $oauth_token;
-            $this->$url = github_api::API_URL;
             get_user_data();
             $this->$repo_name = 'wordpress';
             
@@ -21,7 +20,7 @@
                 )
             );
 
-            $response = wp_remote_get( $this->$url . '/user', $args);
+            $response = wp_remote_get( github_api::API_URL . 'user', $args);
 
 
             if ( is_wp_error( $response ) ) {
@@ -54,9 +53,10 @@
                 echo 'repo creation effed up';
             }
             else {
-                $has_repo = true;
+                $this->$has_repo = true;
                 //right now just returning the url of the newly created repo.
-                return $response['body']['url'];
+                $body = json_decode($response['body']);
+                return $body->url;
             }
 
         }
@@ -68,7 +68,7 @@
         function commit($post) {
             $content = $post['post_content'];
             $file_name = $post['post_title'];
-            $git_url = $this->$url . 'repos/' . $this->$owner . '/' . $this->$repo_name . '/git/ ';
+            $git_url = github_api::API_URL . 'repos/' . $this->$owner . '/' . $this->$repo_name . '/git/';
 
             $args = array(
                 'headers' => array( 
@@ -110,13 +110,16 @@
                'body' => array(
                    'base_tree' => $sha_base_tree,
                    'tree' => array(
-                        'path' => $file_name, //need to define this
+                        'path' => $file_name,
                         'content' => $content
                     )
 
                ),
-               'headers' => array( 'Accept' => 'application/json')
-           );     
+                'headers' => array(
+                    'Accept' => 'application/json',
+                    'Authorization' => 'token ' . $this->$oauth_token
+                )
+            );   
 
 
             $response = wp_remote_post( $git_url . '/trees', $args  );
@@ -139,8 +142,11 @@
                     'tree' => $sha_new_tree
 
                 ),
-                'headers' => array( 'Accept' => 'application/json')
-            ); 
+                'headers' => array(
+                    'Accept' => 'application/json',
+                    'Authorization' => 'token ' . $this->$oauth_token
+                )
+            );     
 
             $response = wp_remote_post( $git_url . 'commits', $args );
 
@@ -158,8 +164,11 @@
                 'body' => array(
                     'sha' => $sha_new_commit
                 ),
-                'headers' => array( 'Accept' => 'application/json')
-            ); 
+                'headers' => array(
+                    'Accept' => 'application/json',
+                    'Authorization' => 'token ' . $this->$oauth_token
+                )
+            );   
 
 
             $response = wp_remote_post( $url . 'refs/head/master', $args );
@@ -178,7 +187,12 @@
 
         function get_repos()
         {
-            $args = array('headers' => array('Accept' => 'application/json'));
+            $args = array(
+                'headers' => array(
+                    'Accept' => 'application/json',
+                    'Authorization' => 'token ' . $this->$oauth_token
+                )
+            );
             $response = wp_remote_get(github_api::API_URL . 'user/repos?access_token=' . $oauth_token, $args);
 
             if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
