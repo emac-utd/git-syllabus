@@ -24,7 +24,7 @@
 
 
             if ( is_wp_error( $response ) ) {
-                echo 'get_user_data effed up';
+                error_log('get_user_data effed up', 0);
             }
             else {
                 $body = json_decode($response['body']);
@@ -50,7 +50,7 @@
             $response = wp_remote_post( $url . 'user/repos', $args );
 
             if (is_wp_error( $response )) {
-                echo 'repo creation effed up';
+                error_log('repo creation effed up', 0);
             }
             else {
                 $this->has_repo = true;
@@ -83,7 +83,7 @@
             //get sha from latest commit
 
             if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
-                echo 'getting latest sha failed';
+                error_log('getting latest sha failed', 0);
                 return "";
             }
 
@@ -97,7 +97,7 @@
             //get $sha_base_tree
 
             if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
-                echo 'getting sha tree failed';
+                error_log('getting sha tree failed', 0);
                 return "";
             }
 
@@ -126,7 +126,7 @@
 
 
             if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
-                echo 'creating tree failed';
+                error_log('creating tree failed', 0);
                 return "";
             }
 
@@ -151,7 +151,7 @@
             $response = wp_remote_post( $git_url . 'commits', $args );
 
             if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
-                echo 'creating commit failed';
+                error_log('creating commit failed', 0);
                 return "";
             }
 
@@ -174,7 +174,7 @@
             $response = wp_remote_post( $url . 'refs/head/master', $args );
 
             if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
-                echo 'creating reference failed';
+                error_log('creating reference failed', 0);
                 return "";
             }
 
