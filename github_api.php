@@ -5,9 +5,9 @@
 
 
         function __construct($oauth_token) { 
-            $this->$oauth_token = $oauth_token;
-            get_user_data();
-            $this->$repo_name = 'wordpress';
+            $this->oauth_token = $oauth_token;
+            $this->get_user_data();
+            $this->repo_name = 'wordpress';
             
         }
 
@@ -16,7 +16,7 @@
             $args = array(
                 'headers' => array( 
                     'Accept' => 'application/json',
-                    'Authorization' => 'token ' . $this->$oauth_token
+                    'Authorization' => 'token ' . $this->oauth_token
                 )
             );
 
@@ -28,11 +28,11 @@
             }
             else {
                 $body = json_decode($response['body']);
-                $this->$owner = $body->login;
-                $this->$type = $body->type;
+                $this->owner = $body->login;
+                $this->type = $body->type;
 
-                if ($this->$type != 'User') {
-                    $this->$is_org = true;
+                if ($this->type != 'User') {
+                    $this->is_org = true;
                 }
             }  
 
@@ -42,7 +42,7 @@
             //TODO: build in a verification that the repo doesn't exist yet
 
             //create
-            $this->$repo_name = $name;
+            $this->repo_name = $name;
 
             //add conditional for creating for org? (different pathway)
             $args = array('name' => $name );
@@ -53,7 +53,7 @@
                 echo 'repo creation effed up';
             }
             else {
-                $this->$has_repo = true;
+                $this->has_repo = true;
                 //right now just returning the url of the newly created repo.
                 $body = json_decode($response['body']);
                 return $body->url;
@@ -66,14 +66,14 @@
         }
 
         function commit($post) {
-            $content = $post['post_content'];
-            $file_name = $post['post_title'];
-            $git_url = github_api::API_URL . 'repos/' . $this->$owner . '/' . $this->$repo_name . '/git/';
+            $content = $post->post_content;
+            $file_name = $post->post_title;
+            $git_url = github_api::API_URL . 'repos/' . $this->owner . '/' . $this->repo_name . '/git/';
 
             $args = array(
                 'headers' => array( 
                     'Accept' => 'application/json',
-                    'Authorization' => 'token ' . $this->$oauth_token
+                    'Authorization' => 'token ' . $this->oauth_token
                 )
             );
 
@@ -117,7 +117,7 @@
                ),
                 'headers' => array(
                     'Accept' => 'application/json',
-                    'Authorization' => 'token ' . $this->$oauth_token
+                    'Authorization' => 'token ' . $this->oauth_token
                 )
             );   
 
@@ -144,7 +144,7 @@
                 ),
                 'headers' => array(
                     'Accept' => 'application/json',
-                    'Authorization' => 'token ' . $this->$oauth_token
+                    'Authorization' => 'token ' . $this->oauth_token
                 )
             );     
 
@@ -166,7 +166,7 @@
                 ),
                 'headers' => array(
                     'Accept' => 'application/json',
-                    'Authorization' => 'token ' . $this->$oauth_token
+                    'Authorization' => 'token ' . $this->oauth_token
                 )
             );   
 
@@ -190,7 +190,7 @@
             $args = array(
                 'headers' => array(
                     'Accept' => 'application/json',
-                    'Authorization' => 'token ' . $this->$oauth_token
+                    'Authorization' => 'token ' . $this->oauth_token
                 )
             );
             $response = wp_remote_get(github_api::API_URL . 'user/repos', $args);
