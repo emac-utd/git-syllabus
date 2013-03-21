@@ -109,10 +109,10 @@
            $args = array(
                'body' => array(
                    'base_tree' => $sha_base_tree,
-                   'tree' => array(
+                   'tree' => array(array(
                         'path' => $file_name,
                         'content' => $content
-                    )
+                    ))
 
                ),
                 'headers' => array(
