@@ -94,8 +94,8 @@ function gitsyllabus_options_init(){
     add_settings_section( 'gitsyllabus_options_setup', __('GitSyllabus Setup'), 'gitsyllabus_display_setup', 'git-syllabus');
 
     //Setup fields
-    add_settings_field('gitsyllabus_consumerkey', __('GitHub consumer key'), 'gitsyllabus_display_consumerkey', 'git-syllabus', 'gitsyllabus_options_setup');
-    add_settings_field('gitsyllabus_consumersecret', __('GitHub consumer secret'), 'gitsyllabus_display_consumersecret', 'git-syllabus', 'gitsyllabus_options_setup');
+    add_settings_field('gitsyllabus_consumerkey', __('GitHub Client ID'), 'gitsyllabus_display_consumerkey', 'git-syllabus', 'gitsyllabus_options_setup');
+    add_settings_field('gitsyllabus_consumersecret', __('GitHub Client Secret'), 'gitsyllabus_display_consumersecret', 'git-syllabus', 'gitsyllabus_options_setup');
     add_settings_field('gitsyllabus_authkey', __('GitHub OAuth token'), 'gitsyllabus_display_authkey', 'git-syllabus', 'gitsyllabus_options_setup');
 
 }
@@ -121,15 +121,14 @@ function gitsyllabus_display_consumersecret(){
 
 function gitsyllabus_display_authkey(){
     $options = get_option('gitsyllabus_options');
-
-    echo "<input type='text' id='gitsyllabus_authkey' name='gitsyllabus_options[gitsyllabus_authkey]' size='7' value='{$options['gitsyllabus_authkey']}' /><br />";
-    
-}
-
-function gitsyllabus_display_authsecret(){
-    $options = get_option('gitsyllabus_options');
-
-    echo "<input type='text' id='gitsyllabus_authsecret' name='gitsyllabus_options[gitsyllabus_authsecret]' size='7' value='{$options['gitsyllabus_authsecret']}' /><br />";
+    if($options['gitsyllabus_authkey'])
+    {
+        echo "Key saved";
+    }
+    else
+    {
+        echo "No key saved";
+    }
     
 }
 
@@ -171,16 +170,32 @@ function gitsyllabus_options_page(){
             $token = $getToken->oauth_validate($_GET['code']);
             $options['gitsyllabus_authkey'] = $token;
             update_option('gitsyllabus_options', $options);
-            echo "Token: $token";
-        }
-        else if($_GET['code'])
-        {
-            echo "CSRF attempt detected";
-            echo "State should be ".get_option('gitsyllabus_state'); //Is showing as empty
         }
     ?>
 
         <form action="options.php" method="post">
+            <h2>How to set up GitSyllabus:</h2>
+            
+            <?php 
+                if($options['gitsyllabus_consumerkey'] && $options['gitsyllabus_consumersecret'])
+                {
+                    $redirect = urlencode($currentUrl);
+
+                    update_option('gitsyllabus_state', generate_state());
+                    echo "<p>Now that you've created your application, you can authorize your account and start pushing posts to Github:</p>";
+                    echo "<h3><a href='https://github.com/login/oauth/authorize?".
+                        "client_id=$options[gitsyllabus_consumerkey]".
+                        "&scope=repo".
+                        "&state=".get_option('gitsyllabus_state').
+                        "&redirect_uri=$redirect'>Get token</a></h3>";
+                }
+                else
+                {
+                    echo "<p>First, you need to go into your Github settings and <a title='Create Github application' href='https://github.com/settings/applications/new'>create an application</a>.
+                            Copy and paste the resulting Client ID and Client Secret into the fields below.</p>";
+                }
+            ?>
+
             <?php settings_fields('gitsyllabus_options'); ?>
             <?php do_settings_sections('git-syllabus'); ?>
             
@@ -190,17 +205,7 @@ function gitsyllabus_options_page(){
     <?php
 
         
-        if($options['gitsyllabus_consumerkey'] && $options['gitsyllabus_consumersecret'])
-        {
-            $redirect = urlencode($currentUrl);
-
-            update_option('gitsyllabus_state', generate_state());
-            echo "<a href='https://github.com/login/oauth/authorize?".
-                "client_id=$options[gitsyllabus_consumerkey]".
-                "&scope=repo".
-                "&state=".get_option('gitsyllabus_state').
-                "&redirect_uri=$redirect'>Login with Github</a>";
-        }
+        
 }
 
 add_action('publish_post', 'sync_with_github');

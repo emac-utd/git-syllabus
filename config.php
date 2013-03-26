@@ -20,7 +20,7 @@
             $response = wp_remote_get( wp_redirect( ( OAUTH_URL . 'authorize' ), $args) ); 
 
             if ( is_wp_error( $response ) ) {
-                echo 'oauth init effed up';
+                echo 'oauth init failed';
             }
 
             else {
@@ -41,10 +41,9 @@
                 'headers' => array( 'Accept' => 'application/json')
             );
             $response = wp_remote_post( gitsyllabus_oauth::OAUTH_URL . 'access_token', $args );
-            print_r($response);
 
             if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
-                echo 'oauth validation failed';
+                echo '<div class="error"><p>OAuth validation failed</p></div>';
                 return "";
             }
 
