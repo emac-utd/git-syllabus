@@ -242,18 +242,11 @@ function check_github_auth()
 
         $post = get_post($post_id);
 
-        // if ( !$github->has_repo ) {
-        //     $github->create_repo('wordpress');
-        // }
-
-        // else {
         if(get_post_meta($post->ID,'gs_publish',true) == 'publish')
         {
             $github->commit($post);
             return $post->post_id;
         }
-        
-        // }
 
     }
 
