@@ -24,7 +24,7 @@
 
 
             if ( is_wp_error( $response ) ) {
-                error_log('get_user_data effed up', 0);
+                error_log('get_user_data messed up', 0);
             }
             else {
                 $body = json_decode($response['body']);
@@ -39,7 +39,7 @@
             $response = wp_remote_get( github_api::API_URL . 'user/repos', $args);
 
             if ( is_wp_error( $response ) ) {
-                  error_log('get_user_data effed up', 0);
+                  error_log('get_user_data messed up', 0);
               }
 
             else {
@@ -86,7 +86,7 @@
             $response = wp_remote_post( $url . 'user/repos', $args );
 
             if (is_wp_error( $response )) {
-                error_log('repo creation effed up: ' . print_r($response, true), 0);
+                error_log('repo creation messed up: ' . print_r($response, true), 0);
             }
             else {
                 $this->has_repo = true;
