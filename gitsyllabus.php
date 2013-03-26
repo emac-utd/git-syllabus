@@ -205,6 +205,30 @@ function gitsyllabus_options_page(){
 
 add_action('publish_post', 'sync_with_github');
 
+add_action('admin_notices', 'check_github_auth');
+
+function check_github_auth()
+{
+    $is_post_editor = in_array($GLOBALS['pagenow'], array('post.php', 'post-new.php'));;
+    if($is_post_editor)
+    {
+        $options = get_option('gitsyllabus_options');
+
+        if(!$options['gitsyllabus_authkey'])
+        {
+            echo "<div class='error'><p>To publish to Github, you need to <a title='GitSyllabus Settings' href='options-general.php?page=git-syllabus'>add an authorization for your Github account</a>.</p></div>";
+        }
+        else
+        {
+            $github = new github_api($options['gitsyllabus_authkey']);
+            if(!$github->check_auth())
+            {
+                echo "<div class='error'><p>Your current Github authorization is invalid.  <a title='GitSyllabus Settings' href='options-general.php?page=git-syllabus'>Please log in again</a>.</p></div>";
+            }
+        }
+    }
+}
+
 ?>
 
 <?php 

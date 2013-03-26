@@ -221,6 +221,21 @@
         function get_repo_status() {
             //Need to figure out how deep to make this. Eventual thought is sync.
         }
+
+        function check_auth()
+        {
+            $args = array(
+                'headers' => array(
+                    'Accept' => 'application/json',
+                    'Authorization' => 'token ' . $this->oauth_token
+                )
+            );
+            $response = wp_remote_get(github_api::API_URL . 'user', $args);
+            if ( is_wp_error( $response ) || ($response['response']['code'] >= 400 &&  $response['response']['code'] < 500)) {
+                return false;
+            }
+            return true;
+        }
     }
 
 ?>
