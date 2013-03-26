@@ -103,7 +103,7 @@
         function commit($post) {
             $this->get_user_data();
             $content = $post->post_content;
-            $file_name = $post->post_title;
+            $file_name = $post->post_title . '.html';
             $git_url = github_api::API_URL . 'repos/' . $this->owner . '/' . $this->repo_name . '/git/';
 
             $args = array(
