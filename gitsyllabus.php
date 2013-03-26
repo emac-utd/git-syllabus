@@ -247,9 +247,11 @@ function check_github_auth()
         // }
 
         // else {
-
-        $github->commit($post);
-        return $post->post_id;
+        if(get_post_meta($post->ID,'gs_publish',true) == 'publish')
+        {
+            $github->commit($post);
+            return $post->post_id;
+        }
         
         // }
 
