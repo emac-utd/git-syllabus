@@ -243,7 +243,7 @@ function check_github_auth()
     function sync_with_github($post_id)  {
 
         $options = get_option('gitsyllabus_options');
-        $github = new github_api($options['gitsyllabus_authkey']);
+        $github = new github_api($options['gitsyllabus_authkey'], $options['gitsyllabus_repo_name']);
 
         $post = get_post($post_id);
 
