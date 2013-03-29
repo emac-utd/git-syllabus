@@ -263,5 +263,22 @@ function check_github_auth()
 
     }
 
+    //TODO: Need to add fields to settings page in order to populate these in db.
+    //Should commit the resulting data only when there's an update to them.
+    function generate_meta_file() {
+        $options = get_option('gitsyllabus_options');
+
+        $meta_file = array(
+            'instructor' => $options['instructor'],
+            'discipline' => $options['discipline'],
+            'institution' => $options['institution'],
+            'concentration' => $options['concentration'],
+        );
+
+        $options['meta_file'] = json_encode($meta_file);
+
+        update_option('gitsyllabus_options', $options);
+    }
+
 ?>
 
