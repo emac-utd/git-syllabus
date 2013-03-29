@@ -268,6 +268,24 @@
             }
             return true;
         }
+
+        //TODO: Need to add metafields to post UI to pull this information. Some can potentially
+        //be pulled from settings page? (at least instructor)
+
+        function add_metadata($content, $metadata) {
+            $meta_html = "/* Git-Syllabus" 
+                . "\n Title: " . $metadata['title'] 
+                . "\n Instructor: " . $metadata['instructor']
+                . "\n Discipline: " . $metadata['discipline']
+                . "\n Taught: " . $metadata['taught']
+                . "\n Level: " . $metadata['level']
+                . "\n Semester: " . $metadata['semester']
+                . "*/ \n\n";
+
+            return $metadata . $content;
+
+
+        }
     }
 
 ?>
