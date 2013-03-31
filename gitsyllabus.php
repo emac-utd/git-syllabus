@@ -249,7 +249,7 @@ function check_github_auth()
 
         if(get_post_meta($post->ID,'gs_publish',true) == 'publish')
         {
-            $github->commit($post);
+            $github->commit_post($post);
             return $post->post_id;
         }
 
