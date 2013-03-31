@@ -97,10 +97,15 @@
 
         }
 
-        function commit($post) {
-            $this->get_user_data();
-            $content = $post->post_content;
-            $file_name = $post->post_title . '.html';
+        function commit_post($post) {
+            $metadata = generate_metadata($post);
+            $content = $metadata . $post->post_content;
+            $file_name = $post->post_title . '.md';
+            $this->commit($file_name, $content);            
+        }
+
+        function commit($file_name, $content) {
+
             $git_url = github_api::API_URL . 'repos/' . $this->owner . '/' . $this->repo_name . '/git/';
 
             $args = array(
@@ -272,18 +277,24 @@
         //TODO: Need to add metafields to post UI to pull this information. Some can potentially
         //be pulled from settings page? (at least instructor)
 
-        function add_metadata($content, $metadata) {
-            $meta_html = "/* Git-Syllabus" 
-                . "\n Title: " . $metadata['title'] 
-                . "\n Instructor: " . $metadata['instructor']
-                . "\n Discipline: " . $metadata['discipline']
-                . "\n Taught: " . $metadata['taught']
-                . "\n Level: " . $metadata['level']
-                . "\n Semester: " . $metadata['semester']
-                . "*/ \n\n";
+        function generate_metadata($post) {
+            $meta_html = "<!-- Git-Syllabus" 
+                . "\n Title: " . get_post_meta($post->ID, 'gs_title', true) 
+                . "\n Instructor: " . get_post_meta($post->ID, 'gs_instructor', true)
+                . "\n Discipline: " . get_post_meta($post->ID, 'gs_discipline', true)
+                . "\n Taught: " . get_post_meta($post->ID, 'gs_taught', true)
+                . "\n Level: " . get_post_meta($post->ID, 'gs_level', true)
+                . "\n Semester: " . get_post_meta($post->ID, 'gs_semester', true)
+                . " --> \n\n";
 
-            return $metadata . $content;
+            return $meta_html;
 
+
+        }
+
+        function commit_metafile($metafile) {
+            $file_name = 'metadata.json';
+            $this->commit($file_name, $metafile);
 
         }
     }
