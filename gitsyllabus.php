@@ -396,10 +396,14 @@ function check_github_auth()
     }
 
     function check_metadata($old, $new) {
-        if ($old['instructor'] != $new['instructor']
+        if (($old['gitsyllabus_authkey'] != $new['gitsyllabus_authkey']
+            || $old['gitsyllabus_repo_name'] != $new['gitsyllabus_repo_name']
+            || $old['instructor'] != $new['instructor']
             || $old['discipline'] != $new['discipline']
             || $old['institution'] != $new['institution']
-            || $old['concentration'] != $new['concentration']) {
+            || $old['concentration'] != $new['concentration'])
+            && $new['gitsyllabus_repo_name']
+            && $new['gitsyllabus_authkey']) { //Need authkey and repo_name to commit
 
             generate_meta_file();
             sync_meta_file();
