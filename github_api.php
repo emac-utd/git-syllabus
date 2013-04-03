@@ -6,7 +6,7 @@
 
         function __construct($oauth_token, $repo_name) { 
             $this->oauth_token = $oauth_token;
-            $this->repo_name = 'gitsyllabus ' . $repo_name;
+            $this->repo_name = 'gitsyllabus-' . $repo_name;
             $this->get_user_data();
 
         }
@@ -52,7 +52,7 @@
             }
 
             if (!$this->has_repo) {
-                create_repo();
+                $this->create_repo();
             }
 
         }
@@ -98,7 +98,7 @@
         }
 
         function commit_post($post) {
-            $metadata = generate_metadata($post);
+            $metadata = $this->generate_metadata($post);
             $content = $metadata . $post->post_content;
             $file_name = $post->post_title . '.md';
             $this->commit($file_name, $content);            

@@ -30,15 +30,27 @@ function gitsyllabus_meta(){
 
     add_meta_box( 'gitsyllabus_publish', //ID
         __('GitSyllabus Publish', 'gitsyllabus_textdomain'), //Title
-        __('gitsyllabus_box_publish', 'gitsyllabus_textdomain'), //Rendering function
+        'gitsyllabus_box_publish', //Rendering function
         'post', //Post type
         'side'); //Location
 
     add_meta_box( 'gitsyllabus_publish', //ID
         __('GitSyllabus Publish', 'gitsyllabus_textdomain'), //Title
-        __('gitsyllabus_box_publish', 'gitsyllabus_textdomain'), //Rendering function
+        'gitsyllabus_box_publish', //Rendering function
         'page', //Post type
         'side'); //Location
+
+    add_meta_box( 'gitsyllabus_metadata', //ID
+        __('GitSyllabus Metadata', 'gitsyllabus_textdomain'), //Title
+        'gitsyllabus_box_data', //Rendering function
+        'post', //Post type
+        'advanced'); //Location
+
+    add_meta_box( 'gitsyllabus_metadata', //ID
+        __('GitSyllabus Metadata', 'gitsyllabus_textdomain'), //Title
+        'gitsyllabus_box_data', //Rendering function
+        'page', //Post type
+        'advanced'); //Location
 
 }
 
@@ -79,8 +91,49 @@ function gitsyllabus_meta_save($post_id){
         return $post_id;
 
     update_post_meta($post_id,'gs_publish',$_POST['gs_publish']);
+    update_post_meta($post_id,'gs_title',$_POST['gs_title']);
+    update_post_meta($post_id,'gs_instructor',$_POST['gs_instructor']);
+    update_post_meta($post_id,'gs_discipline',$_POST['gs_discipline']);
+    update_post_meta($post_id,'gs_taught',$_POST['gs_taught']);
+    update_post_meta($post_id,'gs_level',$_POST['gs_level']);
+    update_post_meta($post_id,'gs_semester',$_POST['gs_semester']);
 
     return $_POST['gs_publish'];
+}
+
+//Metadata box render
+function gitsyllabus_box_data()
+{
+    wp_nonce_field( plugin_basename(__FILE__), 'gitsyllabus_nonce' );
+
+    global $post;
+
+    ?>
+        <p>
+            <label>Title</label><br />
+            <input type='text' name='gs_title' value='<?php echo get_post_meta($post->ID, 'gs_title', true); ?>' />
+        </p>
+        <p>
+            <label>Instructor</label><br />
+            <input type='text' name='gs_instructor' value='<?php echo get_post_meta($post->ID, 'gs_instructor', true); ?>' />
+        </p>
+        <p>
+            <label>Discipline/Subjects</label><br />
+            <input type='text' name='gs_discipline' value='<?php echo get_post_meta($post->ID, 'gs_discipline', true); ?>' />
+        </p>
+        <p>
+            <label>Authors read or referenced</label><br />
+            <input type='text' name='gs_taught' value='<?php echo get_post_meta($post->ID, 'gs_taught', true); ?>' />
+        </p>
+        <p>
+            <label>Level</label><br />
+            <input type='text' name='gs_level' value='<?php echo get_post_meta($post->ID, 'gs_level', true); ?>' />
+        </p>
+        <p>
+            <label>Semester</label><br />
+            <input type='text' name='gs_semester' value='<?php echo get_post_meta($post->ID, 'gs_semester', true); ?>' />
+        </p>
+    <?
 }
 
 //Settings initialization
@@ -225,7 +278,7 @@ function check_github_auth()
         }
         else
         {
-            $github = new github_api($options['gitsyllabus_authkey']);
+            $github = new github_api($options['gitsyllabus_authkey'], $options['gitsyllabus_repo_name']);
             if(!$github->check_auth())
             {
                 echo "<div class='error'><p>Your current Github authorization is invalid.  <a title='GitSyllabus Settings' href='options-general.php?page=git-syllabus'>Please log in again</a>.</p></div>";
