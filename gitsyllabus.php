@@ -150,9 +150,24 @@ function gitsyllabus_options_init(){
     add_settings_field('gitsyllabus_consumerkey', __('GitHub Client ID'), 'gitsyllabus_display_consumerkey', 'git-syllabus', 'gitsyllabus_options_setup');
     add_settings_field('gitsyllabus_consumersecret', __('GitHub Client Secret'), 'gitsyllabus_display_consumersecret', 'git-syllabus', 'gitsyllabus_options_setup');
     add_settings_field('gitsyllabus_authkey', __('GitHub OAuth token'), 'gitsyllabus_display_authkey', 'git-syllabus', 'gitsyllabus_options_setup');
+    add_settings_field('gitsyllabus_repo_name', __('GitHub Repository Name'), 'gitsyllabus_display_repo_name', 'git-syllabus', 'gitsyllabus_options_setup');
+
+    //Create section group for setup
+    add_settings_section( 'gitsyllabus_options_meta', __('Metadata'), 'gitsyllabus_display_metadata', 'git-syllabus');
+
+    //Setup fields
+    add_settings_field('gitsyllabus_instructor', __('Instructor'), 'gitsyllabus_display_instructor', 'git-syllabus', 'gitsyllabus_options_meta');
+    add_settings_field('gitsyllabus_discipline', __('Discipline'), 'gitsyllabus_display_discipline', 'git-syllabus', 'gitsyllabus_options_meta');
+    add_settings_field('gitsyllabus_institution', __('Institution'), 'gitsyllabus_display_institution', 'git-syllabus', 'gitsyllabus_options_meta');
+    add_settings_field('gitsyllabus_concentration', __('Concentration'), 'gitsyllabus_display_concentration', 'git-syllabus', 'gitsyllabus_options_meta');
 
 }
 function gitsyllabus_display_setup(){
+    ?>
+    <?php
+}
+
+function gitsyllabus_display_metadata(){
     ?>
     <?php
 }
@@ -182,6 +197,46 @@ function gitsyllabus_display_authkey(){
     {
         echo "No key saved";
     }
+    
+}
+
+function gitsyllabus_display_repo_name()
+{
+    $options = get_option('gitsyllabus_options');
+
+    echo "<input type='text' id='gitsyllabus_repo_name' name='gitsyllabus_options[gitsyllabus_repo_name]' size='7' value='{$options['gitsyllabus_repo_name']}' /><br />";
+
+}
+
+function gitsyllabus_display_instructor(){
+
+    $options = get_option('gitsyllabus_options');
+
+    echo "<input type='text' id='gitsyllabus_instructor' name='gitsyllabus_options[instructor]' size='7' value='{$options['instructor']}' /><br />";
+    
+}
+
+function gitsyllabus_display_discipline(){
+
+    $options = get_option('gitsyllabus_options');
+
+    echo "<input type='text' id='gitsyllabus_discipline' name='gitsyllabus_options[discipline]' size='7' value='{$options['discipline']}' /><br />";
+    
+}
+
+function gitsyllabus_display_institution(){
+
+    $options = get_option('gitsyllabus_options');
+
+    echo "<input type='text' id='gitsyllabus_institution' name='gitsyllabus_options[institution]' size='7' value='{$options['institution']}' /><br />";
+    
+}
+
+function gitsyllabus_display_concentration(){
+
+    $options = get_option('gitsyllabus_options');
+
+    echo "<input type='text' id='gitsyllabus_concentration' name='gitsyllabus_options[concentration]' size='7' value='{$options['concentration']}' /><br />";
     
 }
 
