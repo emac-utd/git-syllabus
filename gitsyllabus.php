@@ -197,7 +197,9 @@ function gitsyllabus_display_authkey(){
     {
         echo "No key saved";
     }
-    
+
+    echo "<input type='hidden' id='gitsyllabus_authkey' name='gitsyllabus_options[gitsyllabus_authkey]' size='7' value='{$options['gitsyllabus_authkey']}' /><br />";
+
 }
 
 function gitsyllabus_display_repo_name()
@@ -394,7 +396,10 @@ function check_github_auth()
     }
 
     function check_metadata($old, $new) {
-        if ($old['gitsyllabus_repo_name'] != $new['gitsyllabus_repo_name']) {
+        if ($old['instructor'] != $new['instructor']
+            || $old['discipline'] != $new['discipline']
+            || $old['institution'] != $new['institution']
+            || $old['concentration'] != $new['concentration']) {
 
             generate_meta_file();
             sync_meta_file();
