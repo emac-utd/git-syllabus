@@ -371,8 +371,6 @@ function check_github_auth()
 
     }
 
-    //TODO: Need to add fields to settings page in order to populate these in db.
-    //Should commit the resulting data only when there's an update to them.
     function generate_meta_file() {
         $options = get_option('gitsyllabus_options');
 
@@ -387,6 +385,25 @@ function check_github_auth()
 
         update_option('gitsyllabus_options', $options);
     }
+
+    function sync_meta_file() {
+        $options = get_option('gitsyllabus_options');
+        $github = new github_api($options['gitsyllabus_authkey'], $options['gitsyllabus_repo_name']);
+
+        $github->commit_metafile($options['meta_file']);
+    }
+
+    function check_metadata($old, $new) {
+        if ($old['gitsyllabus_repo_name'] != $new['gitsyllabus_repo_name']) {
+
+            generate_meta_file();
+            sync_meta_file();
+            
+        }
+
+    }
+
+    add_action('update_option_gitsyllabus_options', 'check_metadata', 10, 2);
 
 ?>
 
