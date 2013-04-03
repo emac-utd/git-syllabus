@@ -343,13 +343,6 @@ function check_github_auth()
         }
     }
 }
-
-?>
-
-<?php 
-    
-    
-
     function sync_with_github($post_id)  {
 
         $options = get_option('gitsyllabus_options');
@@ -415,4 +408,3 @@ function check_github_auth()
     add_action('update_option_gitsyllabus_options', 'check_metadata', 10, 2);
 
 ?>
-
