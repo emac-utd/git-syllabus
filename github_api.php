@@ -134,7 +134,7 @@
             else {
                 $body = json_decode($response['body']);
                 $sha_base_tree = $body->tree->sha;
-                error_log(print_r($response['body'], true));
+                //error_log(print_r($response['body'], true));
             }
 
            $args = array(
