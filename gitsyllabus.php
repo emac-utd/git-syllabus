@@ -21,8 +21,33 @@ require_once('github_api.php');
 //Need to define init function
 register_activation_hook( __FILE__, 'gitsyllabus_init' );
 
+//Syllabus custom post type
+add_action( 'init', 'create_syllabus_type' );
+function create_syllabus_type() {
+    register_post_type( 'gitsyllabus_syllabus',
+        array(
+            'labels' => array(
+                'name' => __( 'Syllabi' ),
+                'singular_name' => __( 'Syllabus' )
+            ),
+        'public' => true,
+        'has_archive' => false,
+        'show_ui' => true,
+        'supports' => array(
+                'title',
+                'revisions'
+            ),
+        'register_meta_box_cb' => 'gitsyllabus_syllabus_post_meta_boxes'
+        )
+    );
+}
 
 //Meta box functions
+function gitsyllabus_syllabus_post_meta_boxes()
+{
+
+}
+
 add_action('add_meta_boxes', 'gitsyllabus_meta');
 add_action('save_post', 'gitsyllabus_meta_save');
 
