@@ -93,12 +93,17 @@ function gitsyllabus_box_publish(){
         echo '<label for="gs_publish">' . __("Publish to GitHub", 'gitsyllabus_textdomain' ) . '</label> ';
         if(get_post_meta($post->ID,'gs_publish',true) == 'publish')
         {
-            echo '<input type="checkbox" id="gs_publish" name="gs_publish" value="publish" checked="checked" />';
+            echo '<input type="checkbox" id="gs_publish" name="gs_publish" value="publish" checked="checked" /><br>';
         }
         else
         {
-            echo '<input type="checkbox" id="gs_publish" name="gs_publish" value="publish" />';
+            echo '<input type="checkbox" id="gs_publish" name="gs_publish" value="publish" /><br>';
+
         }
+         get_syllabus_list();
+
+         get_checkboxes();
+
     }
 }
 
@@ -115,6 +120,7 @@ function gitsyllabus_meta_save($post_id){
     if ( !current_user_can( 'edit_post', $post_id ) )
         return $post_id;
 
+    update_post_meta($post_id,'gs_syllabus_dropdown',$_POST['gs_syllabus_dropdown']);
     update_post_meta($post_id,'gs_publish',$_POST['gs_publish']);
     update_post_meta($post_id,'gs_title',$_POST['gs_title']);
     update_post_meta($post_id,'gs_instructor',$_POST['gs_instructor']);
@@ -389,6 +395,31 @@ function check_github_auth()
 
         return substr(md5(microtime()),rand(0,26),5);
 
+    }
+
+    function get_syllabus_list() {
+        global $post;
+
+        $args = array(
+            'post_type' => 'gitsyllabus_syllabus'
+            );
+
+        $syllabus_posts = get_posts($args);
+        echo "<select name='gs_syllabus_dropdown' id='gs_syllabus_dropdown'>";
+        $saved_syllabus = get_post_meta( $post->ID, 'gs_syllabus_dropdown', true);
+        foreach ($syllabus_posts as $syllabus) :
+            if ($saved_syllabus == get_the_title($syllabus->ID))
+                echo "<option selected='selected'>" . get_the_title($syllabus->ID) . "</option>";
+            else
+                echo "<option>" . get_the_title($syllabus->ID) . "</option>";
+        endforeach;
+        echo "</select>";
+        
+        
+    }
+
+    function get_checkboxes() {
+        
     }
 
     function generate_meta_file() {
