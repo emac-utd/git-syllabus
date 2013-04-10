@@ -120,7 +120,7 @@ function gitsyllabus_meta_save($post_id){
     if ( !current_user_can( 'edit_post', $post_id ) )
         return $post_id;
 
-    update_post_meta($post_id,'gs_page_contains',$_POST['gs_page_contains[]']);
+    update_post_meta($post_id,'gs_page_contains',$_POST['gs_page_contains']);
     update_post_meta($post_id,'gs_syllabus_dropdown',$_POST['gs_syllabus_dropdown']);
     update_post_meta($post_id,'gs_publish',$_POST['gs_publish']);
     update_post_meta($post_id,'gs_title',$_POST['gs_title']);
@@ -424,14 +424,24 @@ function check_github_auth()
 
         echo '<h4>Page contains:</h4>';
 
-        echo '<label for"schedule">' . __("Schedule", 'gitsyllabus_textdomain' ) . '</label> ';
-        echo "<input type='checkbox' name='gs_page_contains id='schedule' value='Schedule' /><br>";
+        $types = array('Schedule', 'Assignment', 'Description');
 
-        echo '<label for"assignment">' . __("Assignment", 'gitsyllabus_textdomain' ) . '</label> ';
-        echo "<input type='checkbox' name='gs_page_contains[]' id='assignment' value='Assignment' /><br>";
+        $checked = get_post_meta( $post->ID, 'gs_page_contains', true);
 
-        echo '<label for"description">' . __("Description", 'gitsyllabus_textdomain' ) . '</label> ';
-        echo "<input type='checkbox' name='gs_page_contains[]' id='description' value='Description' /><br>";
+        $checkbox_template = "<input type='checkbox' name='gs_page_contains[]' id='%s' value='%s' %s /><br>";
+
+        foreach ($types as $type) {
+            if (in_array($type, $checked))
+                $checkvalue = "checked='checked'";
+            else
+                $checkvalue = '';
+
+            echo '<label for"' . $type .'">' . __($type, 'gitsyllabus_textdomain' ) . '</label>';
+
+            echo sprintf($checkbox_template, $type, $type, $checkvalue);
+
+        }
+        
     }
 
     function generate_meta_file() {
