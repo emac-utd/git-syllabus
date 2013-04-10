@@ -406,13 +406,20 @@ function check_github_auth()
             );
 
         $syllabus_posts = get_posts($args);
+
+        $dropdown_template = "<option %s value=%s>%s</option>";
+
         echo "<select name='gs_syllabus_dropdown' id='gs_syllabus_dropdown'>";
         $saved_syllabus = get_post_meta( $post->ID, 'gs_syllabus_dropdown', true);
         foreach ($syllabus_posts as $syllabus) :
-            if ($saved_syllabus == get_the_title($syllabus->ID))
-                echo "<option selected='selected'>" . get_the_title($syllabus->ID) . "</option>";
+            
+            if ($saved_syllabus == $syllabus->ID)
+                $selected = "selected='selected'";
             else
-                echo "<option>" . get_the_title($syllabus->ID) . "</option>";
+                $selected = '';
+
+            echo sprintf($dropdown_template, $selected, $syllabus->ID,get_the_title($syllabus->ID));
+
         endforeach;
         echo "</select>";
         
