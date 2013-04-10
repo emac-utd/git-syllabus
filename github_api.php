@@ -269,6 +269,8 @@
         //TODO: Need to add metafields to post UI to pull this information. Some can potentially
         //be pulled from settings page? (at least instructor)
 
+
+        //get all of these data from custom post for whatever was selected.
         function generate_metadata($post) {
             $meta_html = "<!-- Git-Syllabus" 
                 . "\n Title: " . get_post_meta($post->ID, 'gs_title', true) 
