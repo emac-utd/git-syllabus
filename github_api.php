@@ -90,7 +90,8 @@
         }
 
         function commit_post($post) {
-            $metadata = $this->generate_metadata($post);
+            $syllabus_id = get_post_meta( $post->ID,'gs_syllabus_dropdown', true );
+            $metadata = $this->generate_metadata($post->ID,$syllabus_id);
             $content = $metadata . $post->post_content;
             $file_name = $post->post_name . '.md';
             $this->commit($file_name, $content);            
@@ -271,14 +272,18 @@
 
 
         //get all of these data from custom post for whatever was selected.
-        function generate_metadata($post) {
+        function generate_metadata($post_id, $syllabus_id) {
+            $page_contains = get_post_meta($post_id, 'gs_page_contains', true);
+            $contains_formatted = implode(',', $page_contains);
+
             $meta_html = "<!-- Git-Syllabus" 
-                . "\n Title: " . get_post_meta($post->ID, 'gs_title', true) 
-                . "\n Instructor: " . get_post_meta($post->ID, 'gs_instructor', true)
-                . "\n Discipline: " . get_post_meta($post->ID, 'gs_discipline', true)
-                . "\n Taught: " . get_post_meta($post->ID, 'gs_taught', true)
-                . "\n Level: " . get_post_meta($post->ID, 'gs_level', true)
-                . "\n Semester: " . get_post_meta($post->ID, 'gs_semester', true)
+                . "\n Title: " . get_post_meta($syllabus_id, 'gs_title', true) 
+                . "\n Instructor: " . get_post_meta($syllabus_id, 'gs_instructor', true)
+                . "\n Discipline: " . get_post_meta($syllabus_id, 'gs_discipline', true)
+                . "\n Taught: " . get_post_meta($syllabus_id, 'gs_taught', true)
+                . "\n Level: " . get_post_meta($syllabus_id, 'gs_level', true)
+                . "\n Semester: " . get_post_meta($syllabus_id, 'gs_semester', true)
+                . "\n Page contains:" . $contains_formatted
                 . " --> \n\n";
 
             return $meta_html;
