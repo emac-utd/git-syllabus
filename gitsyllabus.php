@@ -68,7 +68,7 @@ function gitsyllabus_meta(){
     add_meta_box( 'gitsyllabus_metadata', //ID
         __('GitSyllabus Metadata', 'gitsyllabus_textdomain'), //Title
         'gitsyllabus_box_data', //Rendering function
-        'post', //Post type
+        'gitsyllabus_syllabus', //Post type
         'advanced'); //Location
 
     add_meta_box( 'gitsyllabus_metadata', //ID
