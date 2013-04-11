@@ -18,9 +18,6 @@ if( !class_exists( 'WP_Http' ) )
 require_once('config.php');
 require_once('github_api.php');
 
-//Need to define init function
-register_activation_hook( __FILE__, 'gitsyllabus_init' );
-
 //Syllabus custom post type
 add_action( 'init', 'create_syllabus_type' );
 function create_syllabus_type() {
