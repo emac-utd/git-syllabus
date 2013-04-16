@@ -1,4 +1,6 @@
 <?php
+    require_once('util.php');
+
     class github_api {
 
         const API_URL = 'https://api.github.com/';
@@ -72,16 +74,16 @@
                  )
              ); 
 
-            $response = wp_remote_post( github_api::API_URL . 'user/repos', $args );
+            $response = rest_helper( github_api::API_URL . 'user/repos', $args, 'POST' );
 
-            if (is_wp_error( $response )) {
+            /*if (is_wp_error( $response )) {
                 error_log('repo creation messed up: ' . print_r($response, true), 0);
-            }
-            else {
+            }*/
+            //else {
                 $this->has_repo = true;
                 //right now just returning the url of the newly created repo.
-                $body = json_decode($response['body']);
-            }
+                //$body = json_decode($response['body']);
+            //}
 
         }
 
@@ -157,18 +159,19 @@
             );   
 
 
-            $response = wp_remote_post( $git_url . 'trees', $args  );
+            $response = rest_helper( $git_url . 'trees', $args, 'POST' );
 
+            error_log($git_url.'trees',0);
 
-            if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
+            /*if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
                 error_log('creating tree failed: '.print_r($response, true), 0);
                 return "";
-            }
+            }*/
 
-            else {
-                $body = json_decode($response['body']);
-                $sha_new_tree = $body->sha;
-            }
+            //else {
+                //$body = json_decode($response['body']);
+                $sha_new_tree = $response->sha;
+            //}
 
             $args = array(
                 'body' => json_encode(array(
@@ -184,17 +187,17 @@
                 )
             );     
 
-            $response = wp_remote_post( $git_url . 'commits', $args );
+            $response = rest_helper( $git_url . 'commits', $args, 'POST' );
 
-            if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
+            /*if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
                 error_log('creating commit failed: '.print_r($response, true), 0);
                 return "";
-            }
+            }*/
 
-            else {
-                $body = json_decode($response['body']);
-                $sha_new_commit = $body->sha;
-            }
+            //else {
+                //$body = json_decode($response['body']);
+                $sha_new_commit = $response->sha;
+            //}
 
             $args = array(
                 'body' => json_encode(array(
@@ -205,21 +208,20 @@
                     'Accept' => 'application/json',
                     'Authorization' => 'token ' . $this->oauth_token,
                     'Content-type' => 'application/json'
-                ),
-                'method' => 'PATCH'
+                )
             );   
 
 
-            $response = wp_remote_request( $git_url . 'refs/heads/master', $args );
+            $response = rest_helper( $git_url . 'refs/heads/master', $args, 'PATCH' );
 
-            if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
+            /*if ( is_wp_error( $response ) || $response['response']['code'] >= 400 ) {
                 error_log("creating reference failed: ".print_r($response, true), 0);
                 return "";
             }
 
             else {
                 $body = json_decode($response['body']);
-            }
+            }*/
 
         }
 
