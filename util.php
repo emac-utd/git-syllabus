@@ -1,5 +1,6 @@
 <?php
 
+//Modified from http://wezfurlong.org/blog/2006/nov/http-post-from-php-without-curl/
 function rest_helper($url, $params = null, $verb = 'GET', $format = 'json')
 {
   $cparams = array(
