@@ -53,6 +53,15 @@ function gitsyllabus_syllabus_post_meta_boxes()
 
 }
 
+//UI scripts
+function gitsyllabus_enqueue($hook) {
+    //if( 'edit.php' != $hook )
+    //    return;
+    wp_enqueue_script( 'jquery-ui-datepicker' );
+    wp_enqueue_style( 'jquery-ui-datepicker-style', 'http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css' );
+}
+add_action( 'admin_enqueue_scripts', 'gitsyllabus_enqueue' );
+
 add_action('add_meta_boxes', 'gitsyllabus_meta');
 add_action('save_post', 'gitsyllabus_meta_save');
 
@@ -169,12 +178,13 @@ function gitsyllabus_box_data()
         </p>
         <p>
             <label>Start Date</label><br />
-            <input type='text' name='gs_startdate' value='<?php echo get_post_meta($post->ID, 'gs_startdate', true); ?>' />
+            <input type='text' class='datepicker' name='gs_startdate' value='<?php echo get_post_meta($post->ID, 'gs_startdate', true); ?>' />
         </p>
         <p>
             <label>End Date</label><br />
-            <input type='text' name='gs_enddate' value='<?php echo get_post_meta($post->ID, 'gs_enddate', true); ?>' />
+            <input type='text' class='datepicker' name='gs_enddate' value='<?php echo get_post_meta($post->ID, 'gs_enddate', true); ?>' />
         </p>
+        <script type="text/javascript">jQuery(function(){jQuery('.datepicker').datepicker()});</script>
     <?
 }
 
