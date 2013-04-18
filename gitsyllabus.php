@@ -25,7 +25,15 @@ function create_syllabus_type() {
         array(
             'labels' => array(
                 'name' => __( 'Syllabi' ),
-                'singular_name' => __( 'Syllabus' )
+                'singular_name' => __( 'Syllabus' ),
+                'all_items' => __( 'All Syllabi' ),
+                'add_new_item' => __( 'Add Syllabus' ),
+                'edit_item' => __( 'Edit Syllabus' ),
+                'new_item' => __( 'New Syllabus' ),
+                'view_item' => __( 'View Syllabus' ),
+                'search_items' => __( 'Search Syllabi' ),
+                'not_found' => __( 'No syllabi found' ),
+                'not_found_in_trash' => __( 'No syllabi found in trash')
             ),
         'public' => true,
         'has_archive' => false,
