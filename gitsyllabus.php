@@ -404,23 +404,29 @@ function check_github_auth()
 
         $syllabus_posts = get_posts($args);
 
-        $dropdown_template = "<option %s value=%s>%s</option>";
+        if(count($syllabus_posts) > 0)
+        {
+            $dropdown_template = "<option %s value=%s>%s</option>";
 
-        echo "<select name='gs_syllabus_dropdown' id='gs_syllabus_dropdown'>";
-        $saved_syllabus = get_post_meta( $post->ID, 'gs_syllabus_dropdown', true);
-        foreach ($syllabus_posts as $syllabus) :
-            
-            if ($saved_syllabus == $syllabus->ID)
-                $selected = "selected='selected'";
-            else
-                $selected = '';
+            echo "<select name='gs_syllabus_dropdown' id='gs_syllabus_dropdown'>";
+            $saved_syllabus = get_post_meta( $post->ID, 'gs_syllabus_dropdown', true);
+            foreach ($syllabus_posts as $syllabus) :
+                
+                if ($saved_syllabus == $syllabus->ID)
+                    $selected = "selected='selected'";
+                else
+                    $selected = '';
 
-            echo sprintf($dropdown_template, $selected, $syllabus->ID,get_the_title($syllabus->ID));
+                echo sprintf($dropdown_template, $selected, $syllabus->ID,get_the_title($syllabus->ID));
 
-        endforeach;
-        echo "</select>";
-        
-        
+            endforeach;
+            echo "</select>";
+        }
+
+        else
+        {
+            echo "You must create a syllabus before publishing to GitHub with accompanying syllabus data.";
+        }        
     }
 
     function get_checkboxes() {

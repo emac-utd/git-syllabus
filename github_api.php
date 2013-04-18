@@ -93,7 +93,9 @@
 
         function commit_post($post) {
             $syllabus_id = get_post_meta( $post->ID,'gs_syllabus_dropdown', true );
-            $metadata = $this->generate_metadata($post->ID,$syllabus_id);
+            $metadata = "";
+            if($syllabus_id)
+                $metadata = $this->generate_metadata($post->ID,$syllabus_id);
             $content = $metadata . $post->post_content;
             $file_name = $post->post_name . '.md';
             $this->commit($file_name, $content);            
