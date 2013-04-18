@@ -286,7 +286,8 @@
                 . "\n Discipline: " . get_post_meta($syllabus_id, 'gs_discipline', true)
                 . "\n Taught: " . get_post_meta($syllabus_id, 'gs_taught', true)
                 . "\n Level: " . get_post_meta($syllabus_id, 'gs_level', true)
-                . "\n Semester: " . get_post_meta($syllabus_id, 'gs_semester', true)
+                . "\n Start date: " . get_post_meta($syllabus_id, 'gs_startdate', true)
+                . "\n End date: " . get_post_meta($syllabus_id, 'gs_enddate', true)
                 . "\n Page contains:" . $contains_formatted
                 . " --> \n\n";
 

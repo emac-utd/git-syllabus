@@ -133,7 +133,8 @@ function gitsyllabus_meta_save($post_id){
     update_post_meta($post_id,'gs_discipline',$_POST['gs_discipline']);
     update_post_meta($post_id,'gs_taught',$_POST['gs_taught']);
     update_post_meta($post_id,'gs_level',$_POST['gs_level']);
-    update_post_meta($post_id,'gs_semester',$_POST['gs_semester']);
+    update_post_meta($post_id,'gs_startdate',$_POST['gs_startdate']);
+    update_post_meta($post_id,'gs_enddate',$_POST['gs_enddate']);
 
     return $_POST['gs_publish'];
 }
@@ -167,8 +168,12 @@ function gitsyllabus_box_data()
             <input type='text' name='gs_level' value='<?php echo get_post_meta($post->ID, 'gs_level', true); ?>' />
         </p>
         <p>
-            <label>Semester</label><br />
-            <input type='text' name='gs_semester' value='<?php echo get_post_meta($post->ID, 'gs_semester', true); ?>' />
+            <label>Start Date</label><br />
+            <input type='text' name='gs_startdate' value='<?php echo get_post_meta($post->ID, 'gs_startdate', true); ?>' />
+        </p>
+        <p>
+            <label>End Date</label><br />
+            <input type='text' name='gs_enddate' value='<?php echo get_post_meta($post->ID, 'gs_enddate', true); ?>' />
         </p>
     <?
 }
