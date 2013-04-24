@@ -464,7 +464,7 @@ function check_github_auth()
         $checkbox_template = "<input type='checkbox' name='gs_page_contains[]' id='%s' value='%s' %s /><br>";
 
         foreach ($types as $type) {
-            if (in_array($type, $checked))
+            if (is_array($checked) && in_array($type, $checked))
                 $checkvalue = "checked='checked'";
             else
                 $checkvalue = '';
