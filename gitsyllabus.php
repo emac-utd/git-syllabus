@@ -84,13 +84,6 @@ function gitsyllabus_meta(){
         'gitsyllabus_box_data', //Rendering function
         'gitsyllabus_syllabus', //Post type
         'advanced'); //Location
-
-    add_meta_box( 'gitsyllabus_metadata', //ID
-        __('GitSyllabus Metadata', 'gitsyllabus_textdomain'), //Title
-        'gitsyllabus_box_data', //Rendering function
-        'page', //Post type
-        'advanced'); //Location
-
 }
 
 //Render meta box
