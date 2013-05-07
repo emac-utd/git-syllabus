@@ -281,6 +281,7 @@
             $contains_formatted = implode(',', $page_contains);
 
             $meta_html = "<!-- Git-Syllabus" 
+                . "\n Page Title: " . get_post($post_id)->post_title 
                 . "\n Title: " . get_post_meta($syllabus_id, 'gs_title', true) 
                 . "\n Instructor: " . get_post_meta($syllabus_id, 'gs_instructor', true)
                 . "\n Discipline: " . get_post_meta($syllabus_id, 'gs_discipline', true)
