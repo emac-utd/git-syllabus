@@ -18,8 +18,8 @@ function rest_helper($url, $params = null, $verb = 'GET', $format = 'json')
     }
   }
 
+  $cparams['http']['header'] = 'User-Agent: Git-Syllabus (https://github.com/emac-utd/git-syllabus)\r\n';
   if ($params['headers'] !== null) {
-    $cparams['http']['header'] = '';
     foreach($params['headers'] as $header => $value)
     {
       $cparams['http']['header'] .= $header . ': ' . $value . "\r\n";
@@ -35,8 +35,10 @@ function rest_helper($url, $params = null, $verb = 'GET', $format = 'json')
     // next two lines; it will show you the HTTP response headers across
     // all the redirects:
     //$meta = stream_get_meta_data($fp);
+    //error_log(print_r($cparams, true));
     //error_log(print_r($meta['wrapper_data'], true));
     $res = stream_get_contents($fp);
+    //error_log($res);
   }
 
   if ($res === false) {
