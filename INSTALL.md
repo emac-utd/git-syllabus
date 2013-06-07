@@ -20,4 +20,5 @@ Once you have completed these steps, you may now create Syllabi in a new "Syllab
 * Click on the "Syllabi" tab and then "Add New" to create a syllabus. Supply the syllabus with a title and any metadata you wish to add.
 * Now you may create new postings as you would normally do in WordPress, or reopen and update existing postings and see a new "GitSyllabus Publish" widget. Here you can select "Publish to GitHub," designate a syllabus for the posting to be part of, and indicate some information about what is included in the post (course schedule, assignments, or description).
 * When you publish the post or update it after having completed the previous step, you should be able to see that a markdown file based on your posting has been added to the GitHub repository. If you inspect the "raw" markdown file, you will see metadata about what syllabus the file is attached to located as a comment at the top of the markdown file.
+* If you edit a post after having published it, make changes, and update the posting. Your new updates will get published to the GitHub repository for GitSyllabus
 
