@@ -337,12 +337,25 @@ function gitsyllabus_options_page(){
                     $redirect = urlencode($currentUrl);
 
                     update_option('gitsyllabus_state', generate_state());
-                    echo "<p>Now that you've created your application, you can authorize your account and start pushing posts to Github:</p>";
-                    echo "<h3><a href='https://github.com/login/oauth/authorize?".
+                    if($options['gitsyllabus_authkey'])
+                    {
+                        echo "<p>If GitSyllabus is unable to edit your repository, try refreshing the token here:</p>";
+                        echo "<h3><a href='https://github.com/login/oauth/authorize?".
+                        "client_id=$options[gitsyllabus_consumerkey]".
+                        "&scope=repo".
+                        "&state=".get_option('gitsyllabus_state').
+                        "&redirect_uri=$redirect'>Refresh token</a></h3>";
+                    }
+                    else
+                    {
+                        echo "<p>Now that you've created your application, you can authorize your account and start pushing posts to Github:</p>";
+                        echo "<h3><a href='https://github.com/login/oauth/authorize?".
                         "client_id=$options[gitsyllabus_consumerkey]".
                         "&scope=repo".
                         "&state=".get_option('gitsyllabus_state').
                         "&redirect_uri=$redirect'>Get token</a></h3>";
+                    }
+                    
                 }
                 else
                 {
