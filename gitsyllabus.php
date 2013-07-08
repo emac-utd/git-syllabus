@@ -35,7 +35,7 @@ function create_syllabus_type() {
                 'not_found' => __( 'No syllabi found' ),
                 'not_found_in_trash' => __( 'No syllabi found in trash')
             ),
-        'public' => true,
+        'public' => false,
         'has_archive' => false,
         'show_ui' => true,
         'supports' => array(
