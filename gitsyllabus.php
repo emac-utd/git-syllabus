@@ -359,8 +359,9 @@ function gitsyllabus_options_page(){
                 }
                 else
                 {
-                    echo "<p>First, you need to go into your Github settings and <a title='Create Github application' href='https://github.com/settings/applications/new'>create an application</a>.
-                            Copy and paste the resulting Client ID and Client Secret into the fields below.</p>";
+                    echo "<p>First, you need to go into your Github settings and <a title='Create Github application' href='https://github.com/settings/applications/new'>create an application</a>.</p>
+                            <p>The name can be anything you want.  For the main URL and callback URL, just input your blog's homepage URL.  Click 'Register Application' once you've filled out the fields.</p>
+                            <p>Copy and paste the resulting Client ID and Client Secret into the corresponding fields below.</p>";
                 }
             ?>
 
